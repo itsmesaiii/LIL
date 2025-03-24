@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocked Attackers List</title>
+    <style>
+        body {
+            background-color: #001f3f;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 90%;
+            background-color: #022b4e;
+        }
+        th, td {
+            border: 1px solid white;
+            padding: 10px;
+        }
+        th {
+            background-color: #FFDC00;
+            color: black;
+        }
+        tr:nth-child(even) {
+            background-color: #033a6b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blocked Attackers List</h1>
+    <table id="attackersTable">
+        <thead>
+            <tr>
+                <th>Sl. No</th>
+                <th>IP Address</th>
+                <th>Date of Attack</th>
+                <th>Time of Attack</th>
+                <th>Blockchain Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchBlockedAttackers() {
+            try {
+                const response = await fetch('/get-blocked-attackers');
+                const data = await response.json();
+
+                const tableBody = document.querySelector('#attackersTable tbody');
+                tableBody.innerHTML = ''; // Clear existing data
+
+                data.forEach((entry, index) => {
+                    const row = `<tr>
+                        <td>${index + 1}</td>
+                        <td>${entry.ip}</td>
+                        <td>${entry.date}</td>
+                        <td>${entry.time}</td>
+                        <td>${new Date(entry.blockchainTimestamp * 1000).toLocaleString()}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Failed to load blocked attackers:', error);
+            }
+        }
+
+        window.onload = fetchBlockedAttackers;
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDoS Chain Mitigator</title>
+    <style>
+        body {
+            background-color: #001f3f; /* Dark blue background */
+            color: white; /* White text for readability */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #FFDC00; /* Bright yellow color for the heading */
+        }
+
+        form, button {
+            margin: 20px 0;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #FF4136; /* Bright red button */
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #FF851B; /* Lighter orange on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Send a Message</h1>
+    
+    <!-- Normal Message Form -->
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Enter your message" required>
+        <button type="submit">Send</button>
+    </form>
+
+    <br>
+
+    <!-- DDoS Simulation Button -->
+    <button id="simulateDdos">Simulate DDoS</button>
+
+    <script>
+        // Function to send a single message
+        async function sendMessage(message) {
+            try {
+                const response = await fetch('/send-message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message }),
+                });
+                const result = await response.text();
+                console.log(result);
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        }
+
+        // Normal message submission
+        document.getElementById('messageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = document.getElementById('messageInput').value;
+            await sendMessage(message);
+            document.getElementById('messageInput').value = ''; // Clear input
+            alert('Message sent!');
+        });
+
+        // Simulate DDoS - sends multiple requests automatically
+        document.getElementById('simulateDdos').addEventListener('click', async () => {
+            const numberOfRequests = 100; // Number of requests to simulate DDoS
+            const ddosMessage = "DDoS Attack Message"; // The fixed message
+
+            alert(`Simulating DDoS with ${numberOfRequests} requests...`);
+            
+            for (let i = 0; i < numberOfRequests; i++) {
+                await sendMessage(ddosMessage + ` #${i+1}`);
+            }
+            
+            alert('DDoS simulation complete!');
+        });
+    </script>
+</body>
+</html>
